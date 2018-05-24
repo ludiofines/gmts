@@ -9,7 +9,7 @@ activate:
 	( \
 		virtualenv -p /usr/bin/python3 . && \
 		bash -c 'source $(PWD)/bin/activate' && \
-		pip3 install -r $(PWD)/requirements.txt; \
+		bin/pip3 install -r $(PWD)/requirements.txt; \
 	)
 
 .PHONY: clean
