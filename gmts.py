@@ -51,8 +51,29 @@ else:
                 )
                 filename = '/tmp/' + ii['permalink'] + '.mp3'
                 print('downloading {}'.format(ii['permalink']))
-                rr = requests.get(downUrl)
+                rr = requests.get(downUrl, stream=True)
+                total_length = rr.headers.get('content-length')
                 with open(filename,'wb') as audioData:
-                    audioData.write(rr.content)
+                    if total_length is None:
+                        audioData.write(rr.content)
+                    else:
+                        total_length = int(total_length)
+                        d = 0
+                        num_blocks = 50
+                        block_size = int(total_length / num_blocks)
+                        for data in rr.iter_content(chunk_size=block_size):
+                            d += len(data)
+                            audioData.write(data)
+                            rcvd = int((num_blocks * d) / total_length)
+                            rcvd_perc = int((d / total_length) * 100)
+                            bar = '=' * rcvd
+                            bar += ' ' * (num_blocks - rcvd)
+                            item = ' [{}] {}% from {:.2f} MB\r'.format(
+                                bar,
+                                rcvd_perc,
+                                total_length / 1048576
+                            )
+                            print(item, sep=' ', end=' ', flush=True)
+                        print('')
                 print('done {}'.format(filename))
-                
+
