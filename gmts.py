@@ -40,7 +40,6 @@ else:
                     if line.startswith(prefix):
                         pArray.append(line)
                 last = urlparse(pArray[-1])
-                ms = re.search(r'/media/[0-9]+/([0-9]+)/.*\.128\.mp3', last.path)
                 downUrl = (
                     last.scheme 
                     + '://' 
